@@ -108,6 +108,35 @@ uint8_t to_ascii(int8_t decimal)
   return ASCIIValue;
 }
 
+/*----------------------------------------//
+            Convert 10 to ASCII
+//----------------------------------------*/
+
+char* to_str(uint32_t intager)
+{
+  long placeValue = 1;
+  char digit = 1;
+  char* retval;
+
+  while ((intager / placeValue) > 9)
+  {
+    digit++;
+    placeValue *= 10;
+  }
+
+  char tmp[digit + 1];
+
+  for (int i=0; i<digit; i++)
+  {
+    tmp[i] = (char)((intager / placeValue) + 0x30);
+    intager %= placeValue;
+    placeValue /= 10;
+  }
+
+  tmp[digit] = '\0';
+  retval = tmp;
+  return retval;
+}
 
 /*----------------------------------------//
                 Begin Pin
@@ -458,4 +487,49 @@ void begin_spi(void)
 {
   SPCR = (1 << SPE) | (1 << MSTR);
   SPSR = (1 << SPI2X);
+}
+
+/*----------------------------------------//
+                Begin ADC
+//----------------------------------------*/
+
+void begin_adc(uint8_t adc_channel, int8_t adc_mode)
+{
+  switch (adc_mode)
+  {
+    case AREF:
+      ADMUX |= insert_bit(REFS1, false) | insert_bit(REFS0, false) | (adc_channel <= 8) ? adc_channel : 0b1111;
+      break;
+
+    case AVCC:
+      ADMUX |= insert_bit(REFS0, true) | (adc_channel <= 8) ? adc_channel : 0b1111;
+      break;
+
+    case INTERNAL:
+      ADMUX |= insert_bit(REFS1, true) | insert_bit(REFS0, true) | (adc_channel <= 8) ? adc_channel : 0b1111;
+      break;
+
+    default:
+      break;
+  }
+
+  /* Prescaler 128 */
+  ADCSRA |= insert_bit(ADPS2, true) | insert_bit(ADPS1, true) | insert_bit(ADPS0, true);
+  /* Auto Trigger Mode (Free Running) */
+  ADCSRA |= insert_bit(ADATE, true);
+  /* Enable ADC */
+  ADCSRA |= insert_bit(ADEN, true);
+  /* Start ADC */
+  ADCSRA |= insert_bit(ADSC, true);
+}
+
+/*----------------------------------------//
+                Read ADC
+//----------------------------------------*/
+
+uint16_t read_adc()
+{
+  while(!(ADCSRA & insert_bit(ADIF, true)));
+  
+  return ((ADCH << 8) | ADCL);
 }

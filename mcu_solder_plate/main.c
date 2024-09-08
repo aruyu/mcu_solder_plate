@@ -31,22 +31,34 @@ int main(void)
 	SSD1306_SetPosition(53, 5);                      // set position
 	SSD1306_DrawString("2024");                      // draw string
 	SSD1306_UpdateScreen(SSD1306_ADDR);              // update
-  
-  
+
+  _delay_ms(1000);
+  SSD1306_InverseScreen(SSD1306_ADDR);
+  _delay_ms (1000);
+  SSD1306_NormalScreen(SSD1306_ADDR);
+
   begin_pin(B, 1);
   begin_pwm(OC1A, FAST);
   sei();
   OCR1A = 10000;
+  
+  begin_adc(2, AVCC);
 
 
   /* Replace with your application code */
   while (1)
   {
-    _delay_ms(1000);
-    SSD1306_InverseScreen(SSD1306_ADDR);
+    SSD1306_ClearScreen();
+	  SSD1306_SetPosition(10, 3);
+	  SSD1306_DrawString("Present :");
+	  SSD1306_SetPosition(80, 3);
 
+    uint16_t tmp = read_adc();
+	  SSD1306_DrawString(to_str(tmp));
+
+	  SSD1306_UpdateScreen(SSD1306_ADDR);
+	
     _delay_ms (1000);
-    SSD1306_NormalScreen(SSD1306_ADDR);
   }
   
   return 0;

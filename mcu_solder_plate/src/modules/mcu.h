@@ -37,6 +37,10 @@ typedef uint8_t bool;
 #define DOWN 1
 #define UP 2
 
+#define AREF 0
+#define AVCC 1
+#define INTERNAL 2
+
 #define _OCR0A 0xFF   // Compare with 255   Timer0
 #define _OCR2A 0xF9   // Compare with 249   Timer2 (1ms in 64 Prescaler)
 #define _OCR1AH 0x00
@@ -53,6 +57,7 @@ enum PinNumber
 uint8_t insert_bit(uint8_t bitValue, bool isHigh);
 uint8_t to_hex(int8_t decimal);
 uint8_t to_ascii(int8_t decimal);
+char* to_str(uint32_t intager);
 
 void begin_pin(int8_t port, int8_t pinNumber);
 void begin_port(int8_t port, bool isOutput);
@@ -61,3 +66,5 @@ void begin_pc_interrupt(int8_t PCINTIndex);
 void begin_timer(int8_t timerIndex, bool timerMode);
 void begin_pwm(int8_t PWMIndex, bool PWMMode);
 void begin_spi(void);
+void begin_adc(uint8_t adc_channel, int8_t adc_mode);
+uint16_t read_adc();
