@@ -8,13 +8,8 @@
  */
 
 
-#define F_CPU 16000000UL
 
-#include <avr/io.h>
-#include <avr/interrupt.h>
-#include <util/delay.h>
-
-#include "src/lib/ssd1306.h"
+#include "src/modules/mcu.h"
 
 
 ISR(INT0_vect);
@@ -36,17 +31,25 @@ int main(void)
 	SSD1306_SetPosition(53, 5);                      // set position
 	SSD1306_DrawString("2024");                      // draw string
 	SSD1306_UpdateScreen(SSD1306_ADDR);              // update
+  
+  
+  begin_pin(B, 1);
+  begin_pwm(OC1A, FAST);
+  sei();
+  OCR1A = 10000;
 
 
-    /* Replace with your application code */
-    while (1) 
-    {
-		_delay_ms(1000);
-		SSD1306_InverseScreen(SSD1306_ADDR);
+  /* Replace with your application code */
+  while (1)
+  {
+    _delay_ms(1000);
+    SSD1306_InverseScreen(SSD1306_ADDR);
 
-		_delay_ms (1000);
-		SSD1306_NormalScreen(SSD1306_ADDR);
-    }
+    _delay_ms (1000);
+    SSD1306_NormalScreen(SSD1306_ADDR);
+  }
+  
+  return 0;
 }
 
 
