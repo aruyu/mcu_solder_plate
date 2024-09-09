@@ -1,7 +1,7 @@
 /**
  * NOTE      - mcu.c
  * Author    - Chae Lee-Jin
- * 
+ *
  * Created   - 2024.09.01
  * Github    - https://github.com/aruyu
  * Contact   - vine9151@gmail.com
@@ -502,7 +502,7 @@ void begin_adc(uint8_t adc_channel, int8_t adc_mode)
       break;
 
     case AVCC:
-      ADMUX |= insert_bit(REFS0, true) | (adc_channel <= 8) ? adc_channel : 0b1111;
+      ADMUX |= insert_bit(REFS1, false) | insert_bit(REFS0, true) | (adc_channel <= 8) ? adc_channel : 0b1111;
       break;
 
     case INTERNAL:
@@ -530,6 +530,5 @@ void begin_adc(uint8_t adc_channel, int8_t adc_mode)
 uint16_t read_adc()
 {
   while(!(ADCSRA & insert_bit(ADIF, true)));
-  
   return ((ADCH << 8) | ADCL);
 }

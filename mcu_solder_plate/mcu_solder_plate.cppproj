@@ -209,6 +209,12 @@
     <Compile Include="src\lib\twi.h">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="src\modules\lmt85.c">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="src\modules\lmt85.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="src\modules\mcu.c">
       <SubType>compile</SubType>
     </Compile>
