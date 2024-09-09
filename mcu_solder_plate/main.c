@@ -41,8 +41,6 @@ int main(void)
   begin_pin(B, 1);
   begin_pwm(OC1A, FAST);
   sei();
-  OCR1A = 10000;
-
 
   begin_adc(2, AVCC);
   begin_interrupt(0, MAINTAIN);
@@ -72,10 +70,24 @@ int main(void)
       if (is_neg)
       {
         SSD1306_DrawString("Present : -");
+        OCR1A = 30000;
       }
       else
       {
         SSD1306_DrawString("Present : +");
+
+        if (g_set_temperature > result && g_set_temperature - 10 <= result)
+        {
+          OCR1A = 30000;
+        }
+        else if (g_set_temperature - 10 > result && g_set_temperature <= result)
+        {
+          OCR1A = 5000;
+        }
+        else
+        {
+          OCR1A = 0;
+        }
       }
 
       SSD1306_SetPosition(80, 3);
@@ -87,6 +99,7 @@ int main(void)
     {
       SSD1306_SetPosition(10, 3);
       SSD1306_DrawString("No Plate Detected");
+      OCR1A = 0;
     }
 
     SSD1306_UpdateScreen(SSD1306_ADDR);
